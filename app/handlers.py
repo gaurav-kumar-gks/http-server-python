@@ -27,3 +27,19 @@ class UserAgentHandler(BaseHandler):
         user_agent = request.headers.get("User-Agent", "Unknown")
         len_data = len(user_agent)
         return f'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len_data}\r\n\r\n{user_agent}'.encode()
+
+class FilesHandler(BaseHandler):
+    def get(self, request: Request, *path_params):
+        file_dir = request.config.get("local_file_dir", "")
+        file_name = path_params[0]
+        try:
+            print(f"File name: {file_name} and local_file_dir: {file_dir}")
+            with open(f'{file_dir}{file_name}', 'r') as file:
+                data = file.read()
+                len_data = len(data)
+                return f'HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: {len_data}\r\n\r\n{str(data)}'.encode()
+        except FileNotFoundError:
+            return b'HTTP/1.1 404 Not Found\r\n\r\n'
+        except Exception as e:
+            return f'HTTP/1.1 500 Internal Server Error\r\n\r\n{e}'.encode()
+        

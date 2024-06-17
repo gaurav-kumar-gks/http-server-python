@@ -7,6 +7,7 @@ from app.handlers import (
     RootHandler, 
     EchoHandler, 
     UserAgentHandler,
+    FilesHandler,
 )
 from app.reqres import Request
 
@@ -17,6 +18,7 @@ class Router:
             "^/$": RootHandler(),
             "^/echo/(.*)$": EchoHandler(),
             "^/user-agent$": UserAgentHandler(),
+            "^/files/(.*)$": FilesHandler(),
         }
 
     def route(self, request: Request):
