@@ -1,5 +1,5 @@
 class Request:
-    def __init__(self, data, config=None):
+    def __init__(self, data, config: dict|None = None):
         lines = data.decode().split("\r\n")
         self.method, path, _ = lines[0].split(" ")
         self.data = data.decode().split("\r\n\r\n")[1]
@@ -7,7 +7,7 @@ class Request:
         path_split = path.split("?")
         self.path = path_split[0]
         self.query = {}
-        self.config = config
+        self.config: dict = config if config else {}
         if len(path_split) > 1 and path_split[1]:
             self.query = dict([part.split("=") for part in path_split[1].split("&")])
         for header in lines[1:-2]:

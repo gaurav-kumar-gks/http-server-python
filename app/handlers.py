@@ -42,4 +42,13 @@ class FilesHandler(BaseHandler):
             return b'HTTP/1.1 404 Not Found\r\n\r\n'
         except Exception as e:
             return f'HTTP/1.1 500 Internal Server Error\r\n\r\n{e}'.encode()
-        
+      
+    def post(self, request: Request, *path_params):
+        file_dir = request.config.get("local_file_dir", "")
+        file_name = path_params[0]
+        try:
+            with open(f'{file_dir}{file_name}', 'w') as file:
+                file.write(request.data)
+                return b'HTTP/1.1 201 Created\r\n\r\n'
+        except Exception as e:
+            return f'HTTP/1.1 500 Internal Server Error\r\n\r\n{e}'.encode()
