@@ -1,16 +1,16 @@
-# Uncomment this to pass the first stage
-# import socket
+import socket
 
 
 def main():
-    # You can use print statements as follows for debugging, they'll be visible when running tests.
-    print("Logs from your program will appear here!")
-
-    # Uncomment this to pass the first stage
-    #
-    # server_socket = socket.create_server(("localhost", 4221), reuse_port=True)
-    # server_socket.accept() # wait for client
-
-
+    print("main --")
+    with socket.create_server(("localhost", 4221), reuse_port=True) as server:
+        while True:
+            server_socket, addr = server.accept() # wait for client
+            data = server_socket.recv(1024)
+            print(f"Connected by {addr} received: {data}")
+            if not data:
+                break
+            server_socket.sendall(b'Hello, ' + data)
+            server_socket.close()
 if __name__ == "__main__":
     main()
