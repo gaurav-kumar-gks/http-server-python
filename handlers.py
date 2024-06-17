@@ -1,8 +1,8 @@
-from app.constants import (
+from constants import (
     method_not_allowed_response, 
     ok_response,
 )
-from app.reqres import Request
+from reqres import Request
 
 
 class BaseHandler:
@@ -30,7 +30,7 @@ class UserAgentHandler(BaseHandler):
 
 class FilesHandler(BaseHandler):
     def get(self, request: Request, *path_params):
-        file_dir = request.config.get("local_file_dir", "")
+        file_dir = "/tmp/"
         file_name = path_params[0]
         try:
             print(f"File name: {file_name} and local_file_dir: {file_dir}")
@@ -44,7 +44,7 @@ class FilesHandler(BaseHandler):
             return f'HTTP/1.1 500 Internal Server Error\r\n\r\n{e}'.encode()
       
     def post(self, request: Request, *path_params):
-        file_dir = request.config.get("local_file_dir", "")
+        file_dir = "/tmp/"
         file_name = path_params[0]
         try:
             with open(f'{file_dir}{file_name}', 'w') as file:

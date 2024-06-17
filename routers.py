@@ -1,15 +1,15 @@
 import re
 
-from app.constants import (
+from constants import (
     not_found_response,
 )
-from app.handlers import (
+from handlers import (
     RootHandler, 
     EchoHandler, 
     UserAgentHandler,
     FilesHandler,
 )
-from app.reqres import Request
+from reqres import Request
 
 
 class Router:
