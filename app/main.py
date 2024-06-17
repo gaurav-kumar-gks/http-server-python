@@ -10,7 +10,7 @@ def main():
             print(f"Connected by {addr} received: {data}")
             if not data:
                 break
-            server_socket.sendall(b'Hello, ' + data)
+            server_socket.sendall(b'HTTP/1.1 200 OK\r\n\r\n')
             server_socket.close()
 if __name__ == "__main__":
     main()
