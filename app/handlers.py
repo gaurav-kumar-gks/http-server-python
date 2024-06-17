@@ -52,3 +52,4 @@ class FilesHandler(BaseHandler):
                 return b'HTTP/1.1 201 Created\r\n\r\n'
         except Exception as e:
             return f'HTTP/1.1 500 Internal Server Error\r\n\r\n{e}'.encode()
+        
