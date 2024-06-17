@@ -1,7 +1,6 @@
 import re
 
 from app.constants import (
-    method_not_allowed_response, 
     not_found_response,
 )
 from app.handlers import (
@@ -9,6 +8,7 @@ from app.handlers import (
     EchoHandler, 
     UserAgentHandler,
 )
+from app.reqres import Request
 
 
 class Router:
@@ -19,13 +19,11 @@ class Router:
             "^/user-agent$": UserAgentHandler(),
         }
 
-    def route(self, method, path, headers, data):
+    def route(self, request: Request):
         for route, handler in self.routes.items():
-            match = re.match(route, path)
+            match = re.match(route, request.path)
             if match:
-                path_params = match.groups()
-                route_handler = getattr(handler, method.lower(), None)
-                if route_handler is None:
-                    return method_not_allowed_response
-                return route_handler(path, headers, data, *path_params)
+                method = getattr(handler, request.method.lower(), None)
+                if method:
+                    return method(request, *match.groups())
         return not_found_response
