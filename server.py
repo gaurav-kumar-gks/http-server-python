@@ -1,6 +1,8 @@
 import datetime
 import io
+import os
 import socket
+import sys
     
 class WSGIServer:
     
@@ -71,12 +73,12 @@ class RequestHandler:
         print(f"Request Method: {self.request_method} Path: {self.path} Request Data: {self.request_data}")
     
     def set_environ(self):
-        self.environ = {
+        os_env = {k: v for k, v in os.environ.items()}
+        environ = {
             "wsgi.version": (1, 0),
-            "wsgi.url_scheme": "http",
             "wsgi.input": io.StringIO(self.request_data),
-            "wsgi.errors": "wsgi.errors",
-            "wsgi.multithread": True,
+            "wsgi.errors": sys.stderr,
+            "wsgi.multithread": False,
             "wsgi.multiprocess": False,
             "wsgi.run_once": False,
             "REQUEST_METHOD": self.request_method,
@@ -84,6 +86,9 @@ class RequestHandler:
             "SERVER_NAME": self.server_config.get("server_name"),
             "SERVER_PORT": str(self.server_config.get("server_port")),
         }
+        environ["wsgi.url_scheme"] = "http" if os_env.get("HTTPS", "off") in ["off", "0"] else "https",
+        environ.update(os_env)
+        self.environ = environ
     
     def start_response(self, status, response_headers):
         server_headers = [
